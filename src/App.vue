@@ -13,7 +13,25 @@
 
             </div>
             <div class="card-body">
-              <form >g
+              <form @submit.prevent="addWebite">
+                <div class="form-group">
+                  <input type="text" name="" id="" class="form-control" v-model="newWebsite.nombre"
+                  placeholder="Nombre">                
+                </div>
+
+                <div class="form-group">
+                  <input type="text" name="" id="" class="form-control" v-model="newWebsite.autor"
+                  placeholder="Autor">                
+                </div>
+
+              <div class="form-group">
+                  <input type="text" name="" id="" class="form-control" v-model="newWebsite.url"
+                  placeholder="Url">                
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                  Guardar
+                </button>
 
               </form>
 
@@ -39,6 +57,18 @@
 
                   </thead>
                   <tbody>
+                    <tr v-for="w in websites" :key="w.value">
+                      <td>
+                        <a v-bind:href="w.url" target="_blank">{{w.nombre}}</a>
+                      </td>
+                      <td>
+                        {{w.autor}}
+                      </td>
+                      <td>
+                        <button class="btn btn-danger">Eliminar</button>
+                      </td>
+
+                    </tr>
 
                   </tbody>
                 </table>
@@ -55,20 +85,19 @@
 
 <script>
 import Firebase from 'firebase';
-import config from './config';
+import config from './config.js';
 
 let app = Firebase.initializeApp(config);
 let db = app.database();
-let websiteRef = db.ref('websites');
+let websitesRef = db.ref('websites');
 
 export default {
   name: 'App',
   firebase:{
-    websites: websiteRef
+    websites: websitesRef
   },
 
   data(){
-
     return{
       newWebsite:{
         nombre: '',
@@ -76,6 +105,15 @@ export default {
         url: ''
       }
     }
+  },
+  methods:{
+    addWebite(){
+      websitesRef.push(this.newWebsite);
+      this.newWebsite.nombre = '';
+      this.newWebsite.autor = '';
+      this.newWebsite.url = '';
+    }
+
   }
 }
 </script>

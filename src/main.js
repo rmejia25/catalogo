@@ -3,6 +3,7 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
+
 import {firestorePlugin} from 'vuefire';
 Vue.use(firestorePlugin);
 
