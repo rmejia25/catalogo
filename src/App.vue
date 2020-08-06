@@ -13,7 +13,7 @@
 
             </div>
             <div class="card-body">
-              <form >
+              <form >g
 
               </form>
 
@@ -54,10 +54,28 @@
 </template>
 
 <script>
+import Firebase from 'firebase';
+import config from './config';
+
+let app = Firebase.initializeApp(config);
+let db = app.database();
+let websiteRef = db.ref('websites');
 
 export default {
   name: 'App',
-  components: {
+  firebase:{
+    websites: websiteRef
+  },
+
+  data(){
+
+    return{
+      newWebsite:{
+        nombre: '',
+        autor: '',
+        url: ''
+      }
+    }
   }
 }
 </script>
