@@ -57,15 +57,15 @@
 
                   </thead>
                   <tbody>
-                    <tr v-for="w in websites" :key="w.value">
-                      <td>
+                    <tr v-for="w in websites" v-bind:key="w.website">
+                      <td>                        
                         <a v-bind:href="w.url" target="_blank">{{w.nombre}}</a>
                       </td>
                       <td>
                         {{w.autor}}
                       </td>
                       <td>
-                        <button class="btn btn-danger">Eliminar</button>
+                         <button @click="deleteWebsite(w)" class="btn btn-danger">Eliminar</button>
                       </td>
 
                     </tr>
@@ -91,6 +91,8 @@ let app = Firebase.initializeApp(config);
 let db = app.database();
 let websitesRef = db.ref('websites');
 
+import toastr from 'toastr';
+
 export default {
   name: 'App',
   firebase:{
@@ -99,6 +101,7 @@ export default {
 
   data(){
     return{
+      websites:[],
       newWebsite:{
         nombre: '',
         autor: '',
@@ -106,12 +109,29 @@ export default {
       }
     }
   },
+
+created() {
+             Firebase.database().ref('websites').on('value', (snapshot) => {
+                 this.websites = snapshot.val() 
+             })
+         }, 
+
   methods:{
     addWebite(){
       websitesRef.push(this.newWebsite);
+      toastr.success('Sitio Web Agregado');
+
       this.newWebsite.nombre = '';
       this.newWebsite.autor = '';
       this.newWebsite.url = '';
+      
+    },
+    deleteWebsite:function(w){
+       if(confirm('Are you sure delete it?')) {
+         //Firebase.database().ref("websites").child(id).remove();
+         websitesRef.child(w['.key']).remove();
+      toastr.success('Website removed');
+       }
     }
 
   }
